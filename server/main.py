@@ -1,6 +1,5 @@
 import socket
 import threading
-from network_config import NetworkConfig
 from offer_sender import OfferSender
 from config import udp_port, tcp_port
 
