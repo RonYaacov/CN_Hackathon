@@ -53,7 +53,14 @@ def _start_broadcasting(offer_sender):
     threads.append(broadcast_thread)
 
 def _get_ip_address():
-        return socket.gethostbyname(socket.gethostname())
+    try:
+        # Create a socket and connect to a public server
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.connect(("8.8.8.8", 80))  # Use a public server like Google's DNS
+            ip = s.getsockname()[0]
+        return ip
+    except Exception as e:
+        return f"Error: {e}"
 
 if __name__ == "__main__":
     main()
