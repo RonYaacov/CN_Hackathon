@@ -14,7 +14,8 @@ class TcpRequestHandler(BaseRequestHandler):
         self.connection_socket.connect((self.server_ip, self.server_port))
         
     def send(self, request:BaseRequest):
-        self.connection_socket.send(str(request.file_size)+"\n")
+        message = (str(request.file_size)+"\n").encode("utf-8")
+        self.connection_socket.send(message)
         self.send_time = time.time()
     
     def receive(self)->int:
