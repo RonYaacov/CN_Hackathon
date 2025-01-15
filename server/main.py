@@ -9,14 +9,14 @@ threads = []
 shutdown_event = threading.Event()
 
 def main():
-    try:
-        network_config = NetworkConfig()
-    except Exception as e:
-        print("Network configuration failed. Terminating.")
-        return
-    
-    print("Server started, listening on IP address", network_config.ip_address)
-    offer_sender = OfferSender(network_config, udp_port, tcp_port)
+    # try:
+    #     network_config = NetworkConfig()
+    # except Exception as e:
+    #     print("Network configuration failed. Terminating.")
+    #     return
+    ip = _get_ip_address()
+    print("Server started, listening on IP address", ip)
+    offer_sender = OfferSender(udp_port, tcp_port)
 
     _start_broadcasting(offer_sender)
     
@@ -39,6 +39,9 @@ def _start_broadcasting(offer_sender):
     
     # Add the thread to the list
     threads.append(broadcast_thread)
+
+def _get_ip_address():
+        return socket.gethostbyname(socket.gethostname())
 
 if __name__ == "__main__":
     main()
