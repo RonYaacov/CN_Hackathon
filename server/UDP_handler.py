@@ -33,7 +33,6 @@ class UDPHandler:
             response_data = b'a' * file_size
             chunks = [response_data[i:i + size_of_udp_packet_payload] for i in range(0, file_size, size_of_udp_packet_payload)]
             for index, cunk in enumerate(chunks):
-                print(f"Sending chunk {index+1} of {len(chunks)} to {addr}")
                 msg = create_payload_message(len(chunks), index+1, cunk)
                 self.connection_socket.sendto(msg, addr)
                       

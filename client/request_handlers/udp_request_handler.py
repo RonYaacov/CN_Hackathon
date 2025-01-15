@@ -10,7 +10,7 @@ class UdpRequestHandler(BaseRequestHandler):
     def __init__(self, server_ip:str, server_port:int):
         super().__init__(server_ip, server_port)
         self.connection_socket = socket(AF_INET, SOCK_DGRAM)
-        self.connection_socket.settimeout(1)
+        self.connection_socket.settimeout(5)
         self.bytes_received = 0
         
     def connect(self):
@@ -34,7 +34,8 @@ class UdpRequestHandler(BaseRequestHandler):
                 self.bytes_received += (len(payload[0]))
                 if current_segment == total_segments:
                     return time.time() - self.send_time
-            except Exception:
+            except Exception as e:
+                print(f"Error in receiving payload: {e}")
                 return time.time() - self.send_time
                 
         

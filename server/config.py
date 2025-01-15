@@ -16,4 +16,4 @@ REQUEST_MESSAGE_TYPE = "0x3"  # Message type for request (client to server)
 PAYLOAD_MESSAGE_TYPE = "0x4"  # Message type for the Payload (server to slient)
 
 max_receive_buffer_size = 1024
-size_of_udp_packet_payload = 1024
+size_of_udp_packet_payload = 512
