@@ -14,7 +14,6 @@ class TCPHandler:
         while True:
             self.connection_socket.listen()
             conn, addr = self.connection_socket.accept()
-            print(f"Connection established with {addr}")
             self.create_worker(conn, addr)
         
     def create_worker(self, conn: socket.socket, addr: Tuple[str, int]):

@@ -3,14 +3,14 @@ import time
 from abstractions.base_request import BaseRequest
 from abstractions.base_request_handler import BaseRequestHandler
 from socket import socket, AF_INET, SOCK_DGRAM
-from config import receive_file_max_size, magic_cookie, payload_message_type, request_message_type
+from config import receive_file_max_size, magic_cookie, payload_message_type, request_message_type, paload_header_size
 
 class UdpRequestHandler(BaseRequestHandler):
     
     def __init__(self, server_ip:str, server_port:int):
         super().__init__(server_ip, server_port)
         self.connection_socket = socket(AF_INET, SOCK_DGRAM)
-        self.connection_socket.settimeout(5)
+        self.connection_socket.settimeout(1)
         self.bytes_received = 0
         
     def connect(self):
@@ -26,8 +26,8 @@ class UdpRequestHandler(BaseRequestHandler):
         while True:
             try:
                 bytes_from_server, addr = self.connection_socket.recvfrom(receive_file_max_size)
-                server_magic_cookie, server_message_type, total_segments, current_segment = struct.unpack('!IBQQ', bytes_from_server[:21])
-                payload = struct.unpack(f"{len(bytes_from_server)-21}s",bytes_from_server[21:]) 
+                server_magic_cookie, server_message_type, total_segments, current_segment = struct.unpack('!IBQQ', bytes_from_server[:paload_header_size])
+                payload = struct.unpack(f"{len(bytes_from_server)-paload_header_size}s",bytes_from_server[paload_header_size:]) 
                 if server_magic_cookie != int(magic_cookie, 16) or \
                     server_message_type != int(payload_message_type, 16):
                     continue
@@ -41,6 +41,5 @@ class UdpRequestHandler(BaseRequestHandler):
         
         
     def create_request_message(self, file_size:int)->bytes:
-        
         return struct.pack(f"!IBQ", int(magic_cookie, 16), int(request_message_type, 16), file_size)
 
