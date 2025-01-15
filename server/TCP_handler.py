@@ -25,7 +25,6 @@ class TCPHandler:
     def handle(self, conn: socket.socket, addr: Tuple[str, int]):
         try:
             data = conn.recv(max_receive_buffer_size)
-            print(f"Received data from {addr}: {data.decode()}")
             file_size = int(float(data.decode()))
             response_data = b'a' * file_size
             conn.sendall(response_data)
