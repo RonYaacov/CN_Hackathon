@@ -8,5 +8,3 @@ tcp_port = 13118  # Example TCP port
 # Constants for the offer message
 MAGIC_COOKIE = 0xabcddcba  # Unique identifier to validate the message
 OFFER_MESSAGE_TYPE = 0x2  # Message type for offer (server to client)
-
-from network_config import ip_address, subnet_mask, broadcast_address, network_config

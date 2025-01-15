@@ -8,31 +8,29 @@ class NetworkConfig:
         self.ip_address = None
         self.subnet_mask = None
         self.broadcast_address = None
-        self.initialized = False
+        self.__initialize()
 
+    def __initialize(self):
         try:
             self.ip_address = self.__get_ip_address()
             if self.ip_address is None:
                 raise ValueError("Failed to get IP address")
-            print(f"IP Address: {self.ip_address}")
 
             self.subnet_mask = self.__get_netmask(self.ip_address)
             if self.subnet_mask is None:
                 raise ValueError("Failed to get subnet mask")
-            print(f"Subnet Mask: {self.subnet_mask}")
-
+            
             self.broadcast_address = self.__get_broadcast_address(self.ip_address, self.subnet_mask)
             if self.broadcast_address is None:
                 raise ValueError("Failed to get broadcast address")
             self.broadcast_address = (self.broadcast_address, broadcast_port)
-            print(f"Broadcast Address: {self.broadcast_address}")
 
-            self.initialized = True
         except Exception as e:
             print(f"Error initializing NetworkConfig: {e}")
             print(f"IP Address: {self.ip_address}")
             print(f"Subnet Mask: {self.subnet_mask}")
             print(f"Broadcast Address: {self.broadcast_address}")
+            raise e
 
     def __get_ip_address(self):
         """
@@ -88,9 +86,3 @@ class NetworkConfig:
         except (socket.error, struct.error, IndexError) as e:
             print(f"Error getting broadcast address: {e}")
             return None
-
-# Create an instance of NetworkConfig to calculate and store the values
-network_config = NetworkConfig()
-ip_address = network_config.ip_address
-subnet_mask = network_config.subnet_mask
-broadcast_address = network_config.broadcast_address

@@ -4,9 +4,10 @@ from config import broadcast_interval, broadcast_address
 from formats import create_offer_message
 
 class OfferSender:
-    def __init__(self, udp_port, tcp_port):
+    def __init__(self, network_config, udp_port, tcp_port):
         # Create the offer message once during initialization
         self.offer_msg = create_offer_message(udp_port, tcp_port)
+        self.network_config = network_config
     
     def send_offer(self, shutdown_event):
         """
@@ -21,7 +22,7 @@ class OfferSender:
         
         # Broadcast the offer message at regular intervals until shutdown_event is set
         while not shutdown_event.is_set():
-            broadcast_socket.sendto(self.offer_msg, broadcast_address)
+            broadcast_socket.sendto(self.offer_msg, self.network_config.broadcast_address)
             sleep(broadcast_interval)
         
         # Close the socket when done

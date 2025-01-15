@@ -1,19 +1,22 @@
 import socket
 import threading
+from network_config import NetworkConfig
 from offer_sender import OfferSender
-from config import udp_port, tcp_port, ip_address, network_config
+from config import udp_port, tcp_port
 
 # List to keep track of all threads
 threads = []
 shutdown_event = threading.Event()
 
 def main():
-    if not network_config.initialized:
+    try:
+        network_config = NetworkConfig()
+    except Exception as e:
         print("Network configuration failed. Terminating.")
         return
     
-    print("Server started, listening on IP address", ip_address)
-    offer_sender = OfferSender(udp_port, tcp_port)
+    print("Server started, listening on IP address", network_config.ip_address)
+    offer_sender = OfferSender(network_config, udp_port, tcp_port)
 
     _start_broadcasting(offer_sender)
     
