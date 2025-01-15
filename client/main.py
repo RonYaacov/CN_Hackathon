@@ -23,8 +23,5 @@ def main():
         speed_tester.run_speed_tests()
         print("All transfers complete, listening to offer requests")
 
-        
-        
-
 if __name__ == "__main__":
     main()

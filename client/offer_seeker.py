@@ -1,5 +1,6 @@
 import socket
-from config import listen_broadcast_port, receive_offer_size
+import struct
+from config import listen_broadcast_port, receive_offer_size, magic_cookie, offer_message_type
 
 
 
@@ -18,12 +19,16 @@ class OfferSeeker:
         while True:
             try:
                 data, addr = soc.recvfrom(receive_offer_size)
-                print("Received offer from ", addr)
-                print("Offer is: ", data.decode())#need to remove
                 self.servers_address = addr[0]
-                self.server_port_tcp = int(data.decode().split(":")[1])#this needs to be changed once we have the real msg
-                self.server_port_udp = int(data.decode().split(":")[2])#this needs to be changed once we have the real msg
-                self.data = data.decode()
+                server_magic_cookie, server_offer_message_type, udp_port, tcp_port = struct.unpack('!IBHH', data)
+                server_magic_cookie = hex(server_magic_cookie)
+                server_offer_message_type = hex(server_offer_message_type)
+                if server_magic_cookie != magic_cookie or \
+                    server_offer_message_type != offer_message_type:
+                    continue
+                print("Received offer from ", addr)
+                self.server_port_tcp = tcp_port
+                self.server_port_udp = udp_port
                 break
             except Exception as e:
                 print(f"Error in receiving offer: {e}")
