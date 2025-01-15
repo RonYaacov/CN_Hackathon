@@ -3,7 +3,7 @@ import struct
 import fcntl
 
 # Configuration parameters
-broadcast_port = 50000  # Agreed-upon port for broadcasting
+broadcast_port = 1234  # Agreed-upon port for broadcasting
 broadcast_interval = 1  # Interval in seconds
 
 udp_port = 13117  # Example UDP port
