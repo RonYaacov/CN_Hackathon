@@ -18,6 +18,13 @@ class OfferSender:
         # Create a UDP socket for broadcasting
         broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         broadcast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        while True:
+            try:
+                broadcast_socket.bind(("", 0))
+                sleep(1)
+            except Exception as e:
+                print(f"Error in binding the socket: {e}")
+                sleep(1)
         
         # Broadcast the offer message at regular intervals until shutdown_event is set
         while not shutdown_event.is_set():
