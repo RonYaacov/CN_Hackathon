@@ -1,8 +1,9 @@
+import struct
 import time
 from abstractions.base_request import BaseRequest
 from abstractions.base_request_handler import BaseRequestHandler
 from socket import socket, AF_INET, SOCK_DGRAM
-from config import receive_file_max_size
+from config import receive_file_max_size, magic_cookie, payload_message_type, request_message_type
 
 class UdpRequestHandler(BaseRequestHandler):
     
@@ -16,19 +17,29 @@ class UdpRequestHandler(BaseRequestHandler):
         pass
     
     def send(self, request:BaseRequest):
-        self.connection_socket.sendto(str(request.file_size).encode(), (self.server_ip, self.server_port))
+        msg = self.create_request_message(int(request.file_size))
+        self.connection_socket.sendto(msg, (self.server_ip, self.server_port))
         self.send_time = time.time()
+        
         
     def receive(self)->int:
         while True:
             try:
-                bytes_from_server = self.connection_socket.recvfrom(receive_file_max_size)
-                self.bytes_received += bytes_from_server.count()
-            except TimeoutError:
+                bytes_from_server, addr = self.connection_socket.recvfrom(receive_file_max_size)
+                server_magic_cookie, server_message_type, total_segments, current_segment = struct.unpack('!IBQQ', bytes_from_server[:21])
+                payload = struct.unpack(f"{len(bytes_from_server)-21}s",bytes_from_server[21:]) 
+                if server_magic_cookie != int(magic_cookie, 16) or \
+                    server_message_type != int(payload_message_type, 16):
+                    continue
+                self.bytes_received += (len(payload[0]))
+                if current_segment == total_segments:
+                    return time.time() - self.send_time
+            except Exception:
                 return time.time() - self.send_time
-            except Exception as e:
-                print(f"Error in receiving data from server: {e}")
-                continue
+                
         
         
+    def create_request_message(self, file_size:int)->bytes:
         
+        return struct.pack(f"!IBQ", int(magic_cookie, 16), int(request_message_type, 16), file_size)
+

@@ -1,8 +1,10 @@
 import socket
 import threading
+from threading import Thread
 from offer_sender import OfferSender
 from config import udp_port, tcp_port
 from TCP_handler import TCPHandler
+from UDP_handler import UDPHandler
 
 # List to keep track of all threads
 threads = []
@@ -20,7 +22,15 @@ def main():
 
     _start_broadcasting(offer_sender)
     tcp_handler = TCPHandler()
-    tcp_handler.listen()
+    tcp_thread = Thread(target=tcp_handler.listen)
+    threads.append(tcp_thread)
+    udp_handler = UDPHandler()
+    udp_thread = Thread(target=udp_handler.listen)
+    threads.append(udp_thread)
+    
+    tcp_thread.start()
+    udp_thread.start()
+    
     
     # Keep the main thread alive to allow the broadcast thread to run
     try:

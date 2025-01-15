@@ -33,7 +33,7 @@ class SpeedTester:
         self.tcp_handler.connect()
         self.tcp_handler.send(RequestMsg(self.requested_file_size)) # mybe need to change the way i create this object to reduce cupling
         time_took = self.tcp_handler.receive()
-        print(f"#TCP transfer #{counter} finished, total time:"+
+        print(f"TCP transfer #{counter} finished, total time:"+
               f" {time_took} seconds, total speed: {(self.requested_file_size/time_took)*8} bits/second")
         
         
