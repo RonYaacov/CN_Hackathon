@@ -1,8 +1,5 @@
 import struct
-
-# Constants for the offer message
-MAGIC_COOKIE = 0xabcddcba  # Unique identifier to validate the message
-OFFER_MESSAGE_TYPE = 0x2  # Message type for offer (server to client)
+from config import MAGIC_COOKIE, OFFER_MESSAGE_TYPE
 
 def create_offer_message(udp_port, tcp_port):
     """
