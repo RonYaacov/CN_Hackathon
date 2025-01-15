@@ -1,17 +1,41 @@
 import socket
+import threading
 from offer_sender import OfferSender
+from config import udp_port, tcp_port, get_ip_address
 
+# List to keep track of all threads
+threads = []
+shutdown_event = threading.Event()
 
 def main():
-    ip = get_ip_address() 
+    ip = get_ip_address()
     print("Server started, listening on IP address", ip)
-    offer_sender = OfferSender(get_ip_address(), ip) #the message needs to be change, this is just for testing
-    offer_sender.send_offer()# this should be in a thread
-    
-    
-def get_ip_address():
-    return socket.gethostbyname(socket.gethostname())
+    offer_sender = OfferSender(udp_port, tcp_port)
 
+    _start_broadcasting(offer_sender)
+    # Create and start the broadcast thread
+    broadcast_thread = threading.Thread(target=offer_sender.send_offer)
+    broadcast_thread.daemon = True  # This ensures the thread will exit when the main program exits
+    broadcast_thread.start()
+    
+    # Add the thread to the list
+    threads.append(broadcast_thread)
+    
+    # Keep the main thread alive to allow the broadcast thread to run
+    try:
+        shutdown_event.wait()  # Wait until the event is set
+    except KeyboardInterrupt:
+        print("Server shutting down.")
+        shutdown_event.set()  # Signal the event to stop the program
+
+def _start_broadcasting(offer_sender):
+    # Create and start the broadcast thread
+    broadcast_thread = threading.Thread(target=offer_sender.send_offer, args=(shutdown_event,))
+    broadcast_thread.daemon = True  # This ensures the thread will exit when the main program exits
+    broadcast_thread.start()
+    
+    # Add the thread to the list
+    threads.append(broadcast_thread)
 
 if __name__ == "__main__":
     main()
