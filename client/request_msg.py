@@ -8,3 +8,5 @@ class RequestMsg(BaseRequest):
         self.message_type:str = request_message_type
         self.file_size = file_size
         
+    def __repr__(self):
+        return f"magic_cookie: {self.magic_cookie}, message_type: {self.message_type}, file_size: {self.file_size}"

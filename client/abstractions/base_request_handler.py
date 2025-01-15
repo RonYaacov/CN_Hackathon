@@ -5,13 +5,12 @@ from socket import socket
 
 class BaseRequestHandler(ABC):
     
-    @abstractmethod
-    def __init__(self, ip:str, port:int):
-        self.ip = ip
-        self.port = port
+    def __init__(self, server_ip:str, server_port:int):
+        self.server_ip = server_ip
+        self.server_port = server_port
         self.send_time = 0
         self.receive_time = 0
-        self.connection:socket = None
+        self.connection_socket:socket = None
         self.bytes_received:Optional[int] = None
         
     @abstractmethod
