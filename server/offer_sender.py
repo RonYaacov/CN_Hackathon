@@ -2,7 +2,6 @@ import socket
 from time import sleep
 from config import broadcast_interval, broadcast_address
 from formats import create_offer_message
-from network_config import NetworkConfig
 
 class OfferSender:
     def __init__(self, udp_port, tcp_port):
@@ -17,12 +16,11 @@ class OfferSender:
             shutdown_event (threading.Event): An event to signal when to stop broadcasting.
         """
         # Create a UDP socket for broadcasting
-        network_config = NetworkConfig()
         broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         broadcast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         # Broadcast the offer message at regular intervals until shutdown_event is set
         while not shutdown_event.is_set():
-            broadcast_socket.sendto(self.offer_msg, network_config.broadcast_address)
+            broadcast_socket.sendto(self.offer_msg, broadcast_address)
             sleep(broadcast_interval)
         
         # Close the socket when done
