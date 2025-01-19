@@ -12,6 +12,7 @@ class TcpRequestHandler(BaseRequestHandler):
     def connect(self):
         self.connection_socket = socket(AF_INET, SOCK_STREAM)
         self.connection_socket.connect((self.server_ip, self.server_port))
+        self.connection_socket.settimeout(5)
         
     def send(self, request:BaseRequest):
         message = (str(request.file_size)+"\n").encode("utf-8")
