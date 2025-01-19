@@ -31,13 +31,19 @@ class SpeedTester:
             thread.join()
     
     def tcp_speed_test(self, counter:int):
-        tcp_handler:BaseRequestHandler = self.handler_factory.get_handler(ConnectionTypeEnum.TCP)
-        tcp_handler.connect()
-        tcp_handler.send(RequestMsg(self.requested_file_size))
-        time_took = tcp_handler.receive()
-        print(f"TCP transfer #{counter} finished, total time:"+
-              f" {time_took} seconds, total speed: {(self.requested_file_size/time_took)*8} bits/second")
-        
+        for _ in range(3):
+            try:
+                tcp_handler:BaseRequestHandler = self.handler_factory.get_handler(ConnectionTypeEnum.TCP)
+                tcp_handler.connect()
+                tcp_handler.send(RequestMsg(self.requested_file_size))
+                time_took = tcp_handler.receive()
+                print(f"TCP transfer #{counter} finished, total time:"+
+                    f" {time_took} seconds, total speed: {(self.requested_file_size/time_took)*8} bits/second")
+                return
+            except Exception as e:
+                print(f"Error in TCP transfer #{counter}: {e}")
+                continue
+        print(f"Failed to transfer file in TCP transfer #{counter} after 3 attempts")
         
     
     def udp_speed_test(self, counter:int):
