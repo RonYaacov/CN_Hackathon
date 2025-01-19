@@ -18,6 +18,7 @@ class TCPHandler:
         
     def create_worker(self, conn: socket.socket, addr: Tuple[str, int]):
         worker = Thread(target=self.handle, args=(conn, addr))
+        worker.daemon = True
         self.workers.append(worker)
         worker.start()
         

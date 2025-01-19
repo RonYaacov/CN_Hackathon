@@ -27,6 +27,7 @@ class UDPHandler:
 
     def create_worker(self, file_size, addr):
         worker = Thread(target=self.handle, args=(file_size, addr))
+        worker.daemon = True
         self.workers.append(worker)
         worker.start()
         
