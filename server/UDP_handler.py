@@ -1,7 +1,8 @@
 import socket
 import struct
 from threading import Thread
-from config import udp_port, max_receive_buffer_size, MAGIC_COOKIE, REQUEST_MESSAGE_TYPE, size_of_udp_packet_payload
+from config import udp_port, max_receive_buffer_size, MAGIC_COOKIE,\
+REQUEST_MESSAGE_TYPE, size_of_udp_packet_payload, FAIL, ENDC
 from formats import create_payload_message
 
 class UDPHandler:
@@ -38,5 +39,5 @@ class UDPHandler:
                 self.connection_socket.sendto(msg, addr)
                       
         except Exception as e:
-            print(f"Error in handling connection: {e}")
+            print(f"{FAIL}Error in handling connection: {e}{ENDC}")
         

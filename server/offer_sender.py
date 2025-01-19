@@ -1,6 +1,6 @@
 import socket
 from time import sleep
-from config import broadcast_interval, broadcast_address
+from config import broadcast_interval, broadcast_address, HEADER, ENDC
 from formats import create_offer_message
 
 class OfferSender:
@@ -25,5 +25,5 @@ class OfferSender:
         
         # Close the socket when done
         broadcast_socket.close()
-        print("Broadcasting stopped.")
+        print(f"{HEADER}Broadcasting stopped.{ENDC}")
         

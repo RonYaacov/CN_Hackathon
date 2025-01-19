@@ -1,6 +1,6 @@
 import socket
 from typing import Tuple
-from config import tcp_port, max_receive_buffer_size
+from config import tcp_port, max_receive_buffer_size, FAIL, ENDC
 from threading import Thread
 
 class TCPHandler:
@@ -29,7 +29,7 @@ class TCPHandler:
             conn.sendall(response_data)
                       
         except Exception as e:
-            print(f"Error in handling connection: {e}")        
+            print(f"{FAIL}Error in handling connection: {e}{ENDC}")        
         
         
         
