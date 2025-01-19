@@ -4,6 +4,7 @@ from abstractions.base_request_handler import BaseRequestHandler
 from enums.connection_type_enum import ConnectionTypeEnum
 from request_msg import RequestMsg
 from threading import Thread
+from config import OKGREEN, OKCYAN, OKBLUE, FAIL, WARNING, ENDC
 
 class SpeedTester:
     
@@ -37,13 +38,13 @@ class SpeedTester:
                 tcp_handler.connect()
                 tcp_handler.send(RequestMsg(self.requested_file_size))
                 time_took = tcp_handler.receive()
-                print(f"TCP transfer #{counter} finished, total time:"+
-                    f" {time_took} seconds, total speed: {(self.requested_file_size/time_took)*8} bits/second")
+                print(f"{OKGREEN}TCP transfer #{counter} finished,{OKCYAN} total time:"+
+                    f" {OKBLUE}{time_took}{OKCYAN} seconds, total speed: {OKBLUE}{(self.requested_file_size/time_took)*8} {OKCYAN}bits/second{ENDC}")
                 return
             except Exception as e:
-                print(f"Error in TCP transfer #{counter}: {e}")
+                print(f"{WARNING}Error in TCP transfer #{counter}: {e} {ENDC}")
                 continue
-        print(f"Failed to transfer file in TCP transfer #{counter} after 3 attempts")
+        print(f"{FAIL}Failed to transfer file in TCP transfer #{counter} after 3 attempts{ENDC}")
         
     
     def udp_speed_test(self, counter:int):
@@ -51,9 +52,9 @@ class SpeedTester:
         udp_handler.send(RequestMsg(self.requested_file_size))
         time_took = udp_handler.receive()
         percentage = (udp_handler.bytes_received/self.requested_file_size) * 100
-        print(f"UDP transfer #{counter} finished, total time: {time_took}"+
-              f" seconds, total speed: {(self.requested_file_size/time_took)*8} bits/second, "
-              +f"percentage of packets received successfully: {percentage}%")
+        print(f"{OKGREEN}UDP transfer #{counter} finished, {OKCYAN}total time: {OKBLUE}{time_took}"+
+              f" {OKCYAN}seconds, total speed: {OKBLUE}{(self.requested_file_size/time_took)*8} {OKCYAN}bits/second, "
+              +f"percentage of packets received successfully: {OKBLUE}{percentage}%{ENDC}")
         
      
         

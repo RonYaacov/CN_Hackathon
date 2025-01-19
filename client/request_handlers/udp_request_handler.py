@@ -3,7 +3,8 @@ import time
 from abstractions.base_request import BaseRequest
 from abstractions.base_request_handler import BaseRequestHandler
 from socket import socket, AF_INET, SOCK_DGRAM
-from config import receive_file_max_size, magic_cookie, payload_message_type, request_message_type, paload_header_size
+from config import receive_file_max_size, magic_cookie, payload_message_type,\
+    request_message_type, paload_header_size, FAIL, ENDC
 
 class UdpRequestHandler(BaseRequestHandler):
     
@@ -35,7 +36,7 @@ class UdpRequestHandler(BaseRequestHandler):
                 if current_segment == total_segments:
                     return time.time() - self.send_time
             except Exception as e:
-                print(f"Error in receiving payload: {e}")
+                print(f"{FAIL}Error in receiving payload: {e}{ENDC}")
                 return time.time() - self.send_time
                 
         

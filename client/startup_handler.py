@@ -1,4 +1,5 @@
 from enums.data_metric_enum import DataMetricEnum
+from config import OKBLUE, ENDC, FAIL
 
 
 
@@ -10,7 +11,7 @@ class StartupHandler:
         self.number_of_TCP_connections = 0
         self.number_of_UDP_connections = 0
         self.amount_of_data_in_bytes = 0
-        self.conversion_map = { # mybe need to find a better plcae for this
+        self._conversion_map = {
             "KB" : 1000,
             "MB" : 1000_000,
             "GB" : 1000_000_000,
@@ -25,9 +26,9 @@ class StartupHandler:
         
         
     def get_amount_of_data(self):   
-        self.amount_of_data = self._get_valid_input("Enter the file size you wish to receive: ", is_data_metric=True)
-        self.number_of_TCP_connections = self._get_valid_input("Enter the number of TCP connections: ")
-        self.number_of_UDP_connections = self._get_valid_input("Enter the number of UDP connections: ")
+        self.amount_of_data = self._get_valid_input(f"{OKBLUE}Enter the file size you wish to receive: {ENDC}", is_data_metric=True)
+        self.number_of_TCP_connections = self._get_valid_input(f"{OKBLUE}Enter the number of TCP connections: {ENDC}")
+        self.number_of_UDP_connections = self._get_valid_input(f"{OKBLUE}Enter the number of UDP connections: {ENDC}")
         self.amount_of_data_in_bytes = self._convert_data_to_bytes()
 
     def _get_valid_input(self, prompt, is_data_metric=False):
@@ -39,12 +40,12 @@ class StartupHandler:
                     self.data_metric = DataMetricEnum(input_data[data_metric_index:])
                     return int(input_data[:data_metric_index])
                 except ValueError or IndexError:
-                    print("Please enter a valid file size")
+                    print(f"{FAIL}Please enter a valid file size{ENDC}")
                     continue
             try:
                 return int(input_data)
             except ValueError:
-                print("Please enter a valid number")
+                print(f"{FAIL}Please enter a valid file size{ENDC}")
     
     def _find_data_metric_index(self, data:str):
         for i in range(len(data)):
@@ -55,4 +56,4 @@ class StartupHandler:
         data_metric_list = DataMetricEnum.__members__.values()
         for metric in data_metric_list:
             if metric == self.data_metric:
-                return self.amount_of_data * self.conversion_map[metric.name]
+                return self.amount_of_data * self._conversion_map[metric.name]

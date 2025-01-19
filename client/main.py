@@ -2,13 +2,14 @@ from handler_factory import HandlerFactory
 from speed_tester import SpeedTester
 from startup_handler import StartupHandler
 from offer_seeker import OfferSeeker
+from config import HEADER, OKGREEN, ENDC
 
 
 def main():
     while True:
         start_up_handler =  StartupHandler()
         start_up_handler.get_amount_of_data()
-        print("Client started, listening for offer requests...")
+        print(f"{HEADER}Client started, listening for offer requests...{ENDC}")
         offer_seeker = OfferSeeker()
         offer_seeker.seek_for_offer()
         handler_factory = HandlerFactory(server_address=offer_seeker.servers_address,
@@ -19,7 +20,7 @@ def main():
                             start_up_handler.amount_of_data_in_bytes,
                             handler_factory)
         speed_tester.run_speed_tests()
-        print("All transfers complete, listening to offer requests")
+        print(f"{OKGREEN}All transfers complete, listening to offer requests{ENDC}")
 
 if __name__ == "__main__":
     main()

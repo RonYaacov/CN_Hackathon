@@ -1,6 +1,7 @@
 import socket
 import struct
-from config import listen_broadcast_port, receive_offer_size, magic_cookie, offer_message_type
+from config import listen_broadcast_port, receive_offer_size,\
+magic_cookie, offer_message_type, OKCYAN, FAIL, ENDC
 
 
 
@@ -26,11 +27,11 @@ class OfferSeeker:
                 if server_magic_cookie != magic_cookie or \
                     server_offer_message_type != offer_message_type:
                     continue
-                print("Received offer from ", addr)
+                print(f"{OKCYAN}Received offer from {addr}{ENDC}")
                 self.server_port_tcp = tcp_port
                 self.server_port_udp = udp_port
                 break
             except Exception as e:
-                print(f"Error in receiving offer: {e}")
+                print(f"{FAIL}Error in receiving offer: {e}{ENDC}")
                 continue
         
